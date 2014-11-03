@@ -97,7 +97,9 @@ public class BillingProcessor extends BillingBase {
 
 	private void bindPlayServices() {
 		try {
-			getContext().bindService(new Intent("com.android.vending.billing.InAppBillingService.BIND"), serviceConnection, Context.BIND_AUTO_CREATE);
+			Intent iapIntent = new Intent("com.android.vending.billing.InAppBillingService.BIND");
+			iapIntent.setPackage("com.android.vending");
+			getContext().bindService(iapIntent, serviceConnection, Context.BIND_AUTO_CREATE);
 		} catch (Exception e) {
 			Log.e(LOG_TAG, e.toString());
 		}
@@ -145,7 +147,7 @@ public class BillingProcessor extends BillingBase {
 			if (bundle.getInt(Constants.RESPONSE_CODE) == Constants.BILLING_RESPONSE_RESULT_OK) {
 				cacheStorage.clear();
 				ArrayList<String> purchaseList = bundle.getStringArrayList(Constants.INAPP_PURCHASE_DATA_LIST);
-				ArrayList<String> signatureList = bundle.getStringArrayList(Constants.RESPONSE_INAPP_SIGNATURE_LIST);
+				ArrayList<String> signatureList = bundle.getStringArrayList(Constants.INAPP_DATA_SIGNATURE_LIST);
 				for (int i = 0; i < purchaseList.size(); i++) {
 					String jsonData = purchaseList.get(i);
 					JSONObject purchase = new JSONObject(jsonData);
